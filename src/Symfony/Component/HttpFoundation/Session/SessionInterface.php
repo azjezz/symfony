@@ -38,10 +38,8 @@ interface SessionInterface
 
     /**
      * Sets the session ID.
-     *
-     * @param string $id
      */
-    public function setId($id);
+    public function setId(string $id);
 
     /**
      * Returns the session name.
@@ -52,10 +50,8 @@ interface SessionInterface
 
     /**
      * Sets the session name.
-     *
-     * @param string $name
      */
-    public function setName($name);
+    public function setName(string $name);
 
     /**
      * Invalidates the current session.
@@ -70,7 +66,7 @@ interface SessionInterface
      *
      * @return bool True if session invalidated, false if error
      */
-    public function invalidate($lifetime = null);
+    public function invalidate(int $lifetime = null);
 
     /**
      * Migrates the current session to a new session id while maintaining all
@@ -84,7 +80,7 @@ interface SessionInterface
      *
      * @return bool True if session migrated, false if error
      */
-    public function migrate($destroy = false, $lifetime = null);
+    public function migrate(bool $destroy = false, int $lifetime = null);
 
     /**
      * Force the session to be saved and closed.
@@ -102,7 +98,7 @@ interface SessionInterface
      *
      * @return bool true if the attribute is defined, false otherwise
      */
-    public function has($name);
+    public function has(string $name);
 
     /**
      * Returns an attribute.
@@ -112,15 +108,14 @@ interface SessionInterface
      *
      * @return mixed
      */
-    public function get($name, $default = null);
+    public function get(string $name, $default = null);
 
     /**
      * Sets an attribute.
      *
-     * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      */
-    public function set($name, $value);
+    public function set(string $name, $value);
 
     /**
      * Returns attributes.
@@ -139,11 +134,9 @@ interface SessionInterface
     /**
      * Removes an attribute.
      *
-     * @param string $name
-     *
      * @return mixed The removed value or null when it does not exist
      */
-    public function remove($name);
+    public function remove(string $name);
 
     /**
      * Clears all attributes.
@@ -165,11 +158,9 @@ interface SessionInterface
     /**
      * Gets a bag instance by name.
      *
-     * @param string $name
-     *
      * @return SessionBagInterface
      */
-    public function getBag($name);
+    public function getBag(string $name);
 
     /**
      * Gets session meta.

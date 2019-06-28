@@ -56,7 +56,7 @@ class RedirectResponse extends Response
      *
      * @return static
      */
-    public static function create($url = '', $status = 302, $headers = [])
+    public static function create(string $url = '', int $status = 302, array $headers = [])
     {
         return new static($url, $status, $headers);
     }
@@ -80,7 +80,7 @@ class RedirectResponse extends Response
      *
      * @throws \InvalidArgumentException
      */
-    public function setTargetUrl($url)
+    public function setTargetUrl(string $url)
     {
         if ('' === ($url ?? '')) {
             throw new \InvalidArgumentException('Cannot redirect to an empty URL.');

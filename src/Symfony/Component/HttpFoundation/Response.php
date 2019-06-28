@@ -213,7 +213,7 @@ class Response
      *
      * @return static
      */
-    public static function create($content = '', $status = 200, $headers = [])
+    public static function create($content = '', int $status = 200, array $headers = [])
     {
         return new static($content, $status, $headers);
     }
