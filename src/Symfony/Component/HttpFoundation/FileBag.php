@@ -34,7 +34,7 @@ class FileBag extends ParameterBag
     /**
      * {@inheritdoc}
      */
-    public function replace(array $files = [])
+    public function replace(array $files = []): void
     {
         $this->parameters = [];
         $this->add($files);
@@ -43,7 +43,7 @@ class FileBag extends ParameterBag
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, $value)
+    public function set(string $key, $value): void
     {
         if (!\is_array($value) && !$value instanceof UploadedFile) {
             throw new \InvalidArgumentException('An uploaded file must be an array or an instance of UploadedFile.');
@@ -55,7 +55,7 @@ class FileBag extends ParameterBag
     /**
      * {@inheritdoc}
      */
-    public function add(array $files = [])
+    public function add(array $files = []): void
     {
         foreach ($files as $key => $file) {
             $this->set($key, $file);
@@ -111,7 +111,7 @@ class FileBag extends ParameterBag
      *
      * @return array
      */
-    protected function fixPhpFilesArray($data)
+    protected function fixPhpFilesArray($data): array
     {
         if (!\is_array($data)) {
             return $data;

@@ -34,7 +34,7 @@ class NamespacedAttributeBag extends AttributeBag
     /**
      * {@inheritdoc}
      */
-    public function has(string $name)
+    public function has(string $name): bool
     {
         // reference mismatch: if fixed, re-introduced in array_key_exists; keep as it is
         $attributes = $this->resolveAttributePath($name);
@@ -66,7 +66,7 @@ class NamespacedAttributeBag extends AttributeBag
     /**
      * {@inheritdoc}
      */
-    public function set(string $name, $value)
+    public function set(string $name, $value): void
     {
         $attributes = &$this->resolveAttributePath($name, true);
         $name = $this->resolveKey($name);
@@ -96,10 +96,8 @@ class NamespacedAttributeBag extends AttributeBag
      *
      * @param string $name         Key name
      * @param bool   $writeContext Write context, default false
-     *
-     * @return array
      */
-    protected function &resolveAttributePath(string $name, bool $writeContext = false)
+    protected function &resolveAttributePath(string $name, bool $writeContext = false): array
     {
         $array = &$this->attributes;
         $name = (0 === strpos($name, $this->namespaceCharacter)) ? substr($name, 1) : $name;
@@ -143,10 +141,8 @@ class NamespacedAttributeBag extends AttributeBag
      * Resolves the key from the name.
      *
      * This is the last part in a dot separated string.
-     *
-     * @return string
      */
-    protected function resolveKey(string $name)
+    protected function resolveKey(string $name): string
     {
         if (false !== $pos = strrpos($name, $this->namespaceCharacter)) {
             $name = substr($name, $pos + 1);

@@ -206,7 +206,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      * @throws \PDOException    When the table already exists
      * @throws \DomainException When an unsupported PDO driver is used
      */
-    public function createTable()
+    public function createTable(): void
     {
         // connect if we are not yet
         $this->getConnection();
@@ -249,10 +249,8 @@ class PdoSessionHandler extends AbstractSessionHandler
      * Returns true when the current session exists but expired according to session.gc_maxlifetime.
      *
      * Can be used to distinguish between a new session and one that expired due to inactivity.
-     *
-     * @return bool Whether current session expired
      */
-    public function isSessionExpired()
+    public function isSessionExpired(): bool
     {
         return $this->sessionExpired;
     }
@@ -260,7 +258,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
         $this->sessionExpired = false;
 
@@ -274,7 +272,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         try {
             return parent::read($sessionId);
@@ -288,7 +286,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         // We delay gc() to close() so that it is executed outside the transactional and blocking read-write process.
         // This way, pruning expired sessions does not block them from being started while the current session is used.
@@ -300,7 +298,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy(string $sessionId)
+    protected function doDestroy(string $sessionId): bool
     {
         // delete the record associated with this id
         $sql = "DELETE FROM $this->table WHERE $this->idCol = :id";
@@ -321,7 +319,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doWrite(string $sessionId, string $data)
+    protected function doWrite(string $sessionId, string $data): bool
     {
         $maxlifetime = (int) ini_get('session.gc_maxlifetime');
 
@@ -367,7 +365,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
+    public function updateTimestamp($sessionId, $data): bool
     {
         $maxlifetime = (int) ini_get('session.gc_maxlifetime');
 
@@ -391,7 +389,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         $this->commit();
 
@@ -424,7 +422,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * Lazy-connects to the database.
      */
-    private function connect(string $dsn)
+    private function connect(string $dsn): void
     {
         $this->pdo = new \PDO($dsn, $this->username, $this->password, $this->connectionOptions);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -535,7 +533,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      * due to http://www.mysqlperformanceblog.com/2013/12/12/one-more-innodb-gap-lock-to-avoid/ .
      * So we change it to READ COMMITTED.
      */
-    private function beginTransaction()
+    private function beginTransaction(): void
     {
         if (!$this->inTransaction) {
             if ('sqlite' === $this->driver) {
@@ -553,7 +551,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * Helper method to commit a transaction.
      */
-    private function commit()
+    private function commit(): void
     {
         if ($this->inTransaction) {
             try {
@@ -575,7 +573,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     /**
      * Helper method to rollback a transaction.
      */
-    private function rollback()
+    private function rollback(): void
     {
         // We only need to rollback if we are in a transaction. Otherwise the resulting
         // error would hide the real problem why rollback was called. We might not be
@@ -596,12 +594,8 @@ class PdoSessionHandler extends AbstractSessionHandler
      *
      * We need to make sure we do not return session data that is already considered garbage according
      * to the session.gc_maxlifetime setting because gc() is called after read() and only sometimes.
-     *
-     * @param string $sessionId Session ID
-     *
-     * @return string The session data
      */
-    protected function doRead(string $sessionId)
+    protected function doRead(string $sessionId): string
     {
         if (self::LOCK_ADVISORY === $this->lockMode) {
             $this->unlockStatements[] = $this->doAdvisoryLock($sessionId);
@@ -872,10 +866,8 @@ class PdoSessionHandler extends AbstractSessionHandler
 
     /**
      * Return a PDO instance.
-     *
-     * @return \PDO
      */
-    protected function getConnection()
+    protected function getConnection(): \PDO
     {
         if (null === $this->pdo) {
             $this->connect($this->dsn ?: ini_get('session.save_path'));

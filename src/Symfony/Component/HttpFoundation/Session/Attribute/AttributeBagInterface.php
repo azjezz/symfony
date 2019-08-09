@@ -44,21 +44,21 @@ interface AttributeBagInterface extends SessionBagInterface
      *
      * @param mixed $value
      */
-    public function set(string $name, $value);
+    public function set(string $name, $value): void;
 
     /**
      * Returns attributes.
      *
      * @return array Attributes
      */
-    public function all();
+    public function all(): array;
 
     /**
      * Sets attributes.
      *
      * @param array $attributes Attributes
      */
-    public function replace(array $attributes);
+    public function replace(array $attributes): void;
 
     /**
      * Removes an attribute.

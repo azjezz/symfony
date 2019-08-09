@@ -85,7 +85,7 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         // No reading from new handler until switch-over
         return $this->currentHandler->read($sessionId);
@@ -94,7 +94,7 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $sessionData)
+    public function write($sessionId, $sessionData): bool
     {
         $result = $this->currentHandler->write($sessionId, $sessionData);
         $this->writeOnlyHandler->write($sessionId, $sessionData);
@@ -105,7 +105,7 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function validateId($sessionId)
+    public function validateId($sessionId): bool
     {
         // No reading from new handler until switch-over
         return $this->currentHandler->validateId($sessionId);
@@ -114,7 +114,7 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $sessionData)
+    public function updateTimestamp($sessionId, $sessionData): bool
     {
         $result = $this->currentHandler->updateTimestamp($sessionId, $sessionData);
         $this->writeOnlyHandler->updateTimestamp($sessionId, $sessionData);

@@ -170,10 +170,8 @@ class JsonResponse extends Response
 
     /**
      * Returns options used while encoding data to JSON.
-     *
-     * @return int
      */
-    public function getEncodingOptions()
+    public function getEncodingOptions(): int
     {
         return $this->encodingOptions;
     }

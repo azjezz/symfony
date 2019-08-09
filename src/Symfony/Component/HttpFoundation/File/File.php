@@ -47,12 +47,10 @@ class File extends \SplFileInfo
      * This method uses the mime type as guessed by getMimeType()
      * to guess the file extension.
      *
-     * @return string|null The guessed extension or null if it cannot be guessed
-     *
      * @see MimeTypes
      * @see getMimeType()
      */
-    public function guessExtension()
+    public function guessExtension(): ?string
     {
         return MimeTypes::getDefault()->getExtensions($this->getMimeType())[0] ?? null;
     }
@@ -64,11 +62,9 @@ class File extends \SplFileInfo
      * which uses finfo_file() then the "file" system binary,
      * depending on which of those are available.
      *
-     * @return string|null The guessed mime type (e.g. "application/pdf")
-     *
      * @see MimeTypes
      */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return MimeTypes::getDefault()->guessMimeType($this->getPathname());
     }
@@ -80,7 +76,7 @@ class File extends \SplFileInfo
      *
      * @throws FileException if the target file could not be created
      */
-    public function move(string $directory, string $name = null)
+    public function move(string $directory, string $name = null): self
     {
         $target = $this->getTargetFile($directory, $name);
 
@@ -96,7 +92,7 @@ class File extends \SplFileInfo
         return $target;
     }
 
-    protected function getTargetFile($directory, $name = null)
+    protected function getTargetFile(string $directory, string $name = null): self
     {
         if (!is_dir($directory)) {
             if (false === @mkdir($directory, 0777, true) && !is_dir($directory)) {
@@ -113,12 +109,8 @@ class File extends \SplFileInfo
 
     /**
      * Returns locale independent base name of the given path.
-     *
-     * @param string $name The new file name
-     *
-     * @return string containing
      */
-    protected function getName(string $name)
+    protected function getName(string $name): string
     {
         $originalName = str_replace('\\', '/', $name);
         $pos = strrpos($originalName, '/');

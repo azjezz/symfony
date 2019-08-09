@@ -25,10 +25,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
         $this->saveHandlerName = $this->wrapper ? ini_get('session.save_handler') : 'user';
     }
 
-    /**
-     * @return \SessionHandlerInterface
-     */
-    public function getHandler()
+    public function getHandler(): \SessionHandlerInterface
     {
         return $this->handler;
     }
@@ -38,7 +35,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
         return (bool) $this->handler->open($savePath, $sessionName);
     }
@@ -46,7 +43,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         return (bool) $this->handler->close();
     }
@@ -54,7 +51,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         return (string) $this->handler->read($sessionId);
     }
@@ -62,7 +59,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $data)
+    public function write($sessionId, $data): bool
     {
         return (bool) $this->handler->write($sessionId, $data);
     }
@@ -70,7 +67,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
+    public function destroy($sessionId): bool
     {
         return (bool) $this->handler->destroy($sessionId);
     }
@@ -78,7 +75,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         return (bool) $this->handler->gc($maxlifetime);
     }
@@ -86,7 +83,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function validateId($sessionId)
+    public function validateId($sessionId): bool
     {
         return !$this->handler instanceof \SessionUpdateTimestampHandlerInterface || $this->handler->validateId($sessionId);
     }
@@ -94,7 +91,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
+    public function updateTimestamp($sessionId, $data): bool
     {
         return $this->handler instanceof \SessionUpdateTimestampHandlerInterface ? $this->handler->updateTimestamp($sessionId, $data) : $this->write($sessionId, $data);
     }

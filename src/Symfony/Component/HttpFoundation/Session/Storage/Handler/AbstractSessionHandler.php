@@ -31,7 +31,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
         $this->sessionName = $sessionName;
         if (!headers_sent() && !ini_get('session.cache_limiter') && '0' !== ini_get('session.cache_limiter')) {
@@ -41,25 +41,16 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
         return true;
     }
 
-    /**
-     * @return string
-     */
-    abstract protected function doRead(string $sessionId);
+    abstract protected function doRead(string $sessionId): string;
 
-    /**
-     * @return bool
-     */
-    abstract protected function doWrite(string $sessionId, string $data);
+    abstract protected function doWrite(string $sessionId, string $data): bool;
 
-    /**
-     * @return bool
-     */
-    abstract protected function doDestroy(string $sessionId);
+    abstract protected function doDestroy(string $sessionId): bool;
 
     /**
      * {@inheritdoc}
      */
-    public function validateId($sessionId)
+    public function validateId($sessionId): bool
     {
         $this->prefetchData = $this->read($sessionId);
         $this->prefetchId = $sessionId;
@@ -70,7 +61,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         if (null !== $this->prefetchId) {
             $prefetchId = $this->prefetchId;
@@ -93,7 +84,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $data)
+    public function write($sessionId, $data): bool
     {
         if (null === $this->igbinaryEmptyData) {
             // see https://github.com/igbinary/igbinary/issues/146
@@ -110,7 +101,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
+    public function destroy($sessionId): bool
     {
         if (!headers_sent() && filter_var(ini_get('session.use_cookies'), FILTER_VALIDATE_BOOLEAN)) {
             if (!$this->sessionName) {

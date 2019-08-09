@@ -123,7 +123,7 @@ class StreamedResponse extends Response
      *
      * @return $this
      */
-    public function setContent($content)
+    public function setContent(?string $content)
     {
         if (null !== $content) {
             throw new \LogicException('The content cannot be set on a StreamedResponse instance.');
@@ -139,7 +139,7 @@ class StreamedResponse extends Response
      *
      * @return false
      */
-    public function getContent()
+    public function getContent(): bool
     {
         return false;
     }

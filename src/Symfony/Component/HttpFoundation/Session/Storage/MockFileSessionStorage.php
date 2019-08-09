@@ -48,7 +48,7 @@ class MockFileSessionStorage extends MockArraySessionStorage
     /**
      * {@inheritdoc}
      */
-    public function start()
+    public function start(): bool
     {
         if ($this->started) {
             return true;
@@ -68,7 +68,7 @@ class MockFileSessionStorage extends MockArraySessionStorage
     /**
      * {@inheritdoc}
      */
-    public function regenerate(bool $destroy = false, int $lifetime = null)
+    public function regenerate(bool $destroy = false, int $lifetime = null): bool
     {
         if (!$this->started) {
             $this->start();
@@ -84,7 +84,7 @@ class MockFileSessionStorage extends MockArraySessionStorage
     /**
      * {@inheritdoc}
      */
-    public function save()
+    public function save(): void
     {
         if (!$this->started) {
             throw new \RuntimeException('Trying to save a session that was not started yet or was already closed');
@@ -121,7 +121,7 @@ class MockFileSessionStorage extends MockArraySessionStorage
      * Deletes a session from persistent storage.
      * Deliberately leaves session data in memory intact.
      */
-    private function destroy()
+    private function destroy(): void
     {
         if (is_file($this->getFilePath())) {
             unlink($this->getFilePath());
@@ -139,7 +139,7 @@ class MockFileSessionStorage extends MockArraySessionStorage
     /**
      * Reads session from storage and loads session.
      */
-    private function read()
+    private function read(): void
     {
         $filePath = $this->getFilePath();
         $this->data = is_readable($filePath) && is_file($filePath) ? unserialize(file_get_contents($filePath)) : [];

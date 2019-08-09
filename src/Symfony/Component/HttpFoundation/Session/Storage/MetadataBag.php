@@ -66,7 +66,7 @@ class MetadataBag implements SessionBagInterface
     /**
      * {@inheritdoc}
      */
-    public function initialize(array &$array)
+    public function initialize(array &$array): void
     {
         $this->meta = &$array;
 
@@ -84,10 +84,8 @@ class MetadataBag implements SessionBagInterface
 
     /**
      * Gets the lifetime that the session cookie was set with.
-     *
-     * @return int
      */
-    public function getLifetime()
+    public function getLifetime(): int
     {
         return $this->meta[self::LIFETIME];
     }
@@ -100,7 +98,7 @@ class MetadataBag implements SessionBagInterface
      *                      to expire with browser session. Time is in seconds, and is
      *                      not a Unix timestamp.
      */
-    public function stampNew(int $lifetime = null)
+    public function stampNew(int $lifetime = null): void
     {
         $this->stampCreated($lifetime);
     }
@@ -108,17 +106,15 @@ class MetadataBag implements SessionBagInterface
     /**
      * {@inheritdoc}
      */
-    public function getStorageKey()
+    public function getStorageKey(): string
     {
         return $this->storageKey;
     }
 
     /**
      * Gets the created timestamp metadata.
-     *
-     * @return int Unix timestamp
      */
-    public function getCreated()
+    public function getCreated(): int
     {
         return $this->meta[self::CREATED];
     }
@@ -128,7 +124,7 @@ class MetadataBag implements SessionBagInterface
      *
      * @return int Unix timestamp
      */
-    public function getLastUsed()
+    public function getLastUsed(): int
     {
         return $this->lastUsed;
     }
@@ -144,7 +140,7 @@ class MetadataBag implements SessionBagInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -152,15 +148,15 @@ class MetadataBag implements SessionBagInterface
     /**
      * Sets name.
      */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    private function stampCreated(int $lifetime = null)
+    private function stampCreated(int $lifetime = null): void
     {
         $timeStamp = time();
         $this->meta[self::CREATED] = $this->meta[self::UPDATED] = $this->lastUsed = $timeStamp;
-        $this->meta[self::LIFETIME] = (null === $lifetime) ? ini_get('session.cookie_lifetime') : $lifetime;
+        $this->meta[self::LIFETIME] = $lifetime ?? ini_get('session.cookie_lifetime');
     }
 }

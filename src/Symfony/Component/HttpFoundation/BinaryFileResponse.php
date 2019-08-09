@@ -36,7 +36,7 @@ class BinaryFileResponse extends Response
     protected $deleteFileAfterSend = false;
 
     /**
-     * @param \SplFileInfo|string $file               The file to stream
+     * @param File|\SplFileInfo|string $file               The file to stream
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
      * @param bool                $public             Files are public by default
@@ -74,10 +74,7 @@ class BinaryFileResponse extends Response
     /**
      * Sets the file to stream.
      *
-     * @param \SplFileInfo|string $file               The file to stream
-     * @param string              $contentDisposition
-     * @param bool                $autoEtag
-     * @param bool                $autoLastModified
+     * @param File|\SplFileInfo|string $file The file to stream
      *
      * @return $this
      *
@@ -116,10 +113,8 @@ class BinaryFileResponse extends Response
 
     /**
      * Gets the file.
-     *
-     * @return File The file to stream
      */
-    public function getFile()
+    public function getFile(): File
     {
         return $this->file;
     }
@@ -269,7 +264,7 @@ class BinaryFileResponse extends Response
         return $this;
     }
 
-    private function hasValidIfRangeHeader(?string $header)
+    private function hasValidIfRangeHeader(?string $header): bool
     {
         if ($this->getEtag() === $header) {
             return true;
@@ -317,7 +312,7 @@ class BinaryFileResponse extends Response
      *
      * @throws \LogicException when the content is not null
      */
-    public function setContent($content)
+    public function setContent(?string $content)
     {
         if (null !== $content) {
             throw new \LogicException('The content cannot be set on a BinaryFileResponse instance.');
@@ -326,10 +321,8 @@ class BinaryFileResponse extends Response
 
     /**
      * {@inheritdoc}
-     *
-     * @return false
      */
-    public function getContent()
+    public function getContent(): bool
     {
         return false;
     }
@@ -337,7 +330,7 @@ class BinaryFileResponse extends Response
     /**
      * Trust X-Sendfile-Type header.
      */
-    public static function trustXSendfileTypeHeader()
+    public static function trustXSendfileTypeHeader(): void
     {
         self::$trustXSendfileTypeHeader = true;
     }

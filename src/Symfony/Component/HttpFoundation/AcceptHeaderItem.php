@@ -33,10 +33,8 @@ class AcceptHeaderItem
 
     /**
      * Builds an AcceptHeaderInstance instance from a string.
-     *
-     * @return self
      */
-    public static function fromString(string $itemValue)
+    public static function fromString(string $itemValue): self
     {
         $parts = HeaderUtils::split($itemValue, ';=');
 
@@ -48,10 +46,8 @@ class AcceptHeaderItem
 
     /**
      * Returns header value's string representation.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $string = $this->value.($this->quality < 1 ? ';q='.$this->quality : '');
         if (\count($this->attributes) > 0) {
@@ -75,10 +71,8 @@ class AcceptHeaderItem
 
     /**
      * Returns the item value.
-     *
-     * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -97,10 +91,8 @@ class AcceptHeaderItem
 
     /**
      * Returns the item quality.
-     *
-     * @return float
      */
-    public function getQuality()
+    public function getQuality(): float
     {
         return $this->quality;
     }
@@ -119,20 +111,16 @@ class AcceptHeaderItem
 
     /**
      * Returns the item index.
-     *
-     * @return int
      */
-    public function getIndex()
+    public function getIndex(): int
     {
         return $this->index;
     }
 
     /**
      * Tests if an attribute exists.
-     *
-     * @return bool
      */
-    public function hasAttribute(string $name)
+    public function hasAttribute(string $name): bool
     {
         return isset($this->attributes[$name]);
     }
@@ -140,7 +128,6 @@ class AcceptHeaderItem
     /**
      * Returns an attribute by its name.
      *
-     * @param string $name
      * @param mixed  $default
      *
      * @return mixed
@@ -152,10 +139,8 @@ class AcceptHeaderItem
 
     /**
      * Returns all attributes.
-     *
-     * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
@@ -163,16 +148,14 @@ class AcceptHeaderItem
     /**
      * Set an attribute.
      *
-     * @param string $value
-     *
      * @return $this
      */
-    public function setAttribute(string $name, $value)
+    public function setAttribute(string $name, string $value)
     {
         if ('q' === $name) {
             $this->quality = (float) $value;
         } else {
-            $this->attributes[$name] = (string) $value;
+            $this->attributes[$name] = $value;
         }
 
         return $this;

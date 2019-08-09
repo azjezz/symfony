@@ -85,7 +85,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -93,7 +93,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy(string $sessionId)
+    protected function doDestroy(string $sessionId): bool
     {
         $this->getCollection()->deleteOne([
             $this->options['id_field'] => $sessionId,
@@ -105,7 +105,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         $this->getCollection()->deleteMany([
             $this->options['expiry_field'] => ['$lt' => new \MongoDB\BSON\UTCDateTime()],
@@ -117,7 +117,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doWrite(string $sessionId, string $data)
+    protected function doWrite(string $sessionId, string $data): bool
     {
         $expiry = new \MongoDB\BSON\UTCDateTime((time() + (int) ini_get('session.gc_maxlifetime')) * 1000);
 
@@ -139,7 +139,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
+    public function updateTimestamp($sessionId, $data): bool
     {
         $expiry = new \MongoDB\BSON\UTCDateTime((time() + (int) ini_get('session.gc_maxlifetime')) * 1000);
 
@@ -157,7 +157,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doRead(string $sessionId)
+    protected function doRead(string $sessionId): string
     {
         $dbData = $this->getCollection()->findOne([
             $this->options['id_field'] => $sessionId,
@@ -180,10 +180,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
         return $this->collection;
     }
 
-    /**
-     * @return \MongoDB\Client
-     */
-    protected function getMongo()
+    protected function getMongo(): \MongoDB\Client
     {
         return $this->mongo;
     }

@@ -32,12 +32,12 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -45,7 +45,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     /**
      * {@inheritdoc}
      */
-    public function initialize(array &$attributes)
+    public function initialize(array &$attributes): void
     {
         $this->attributes = &$attributes;
     }
@@ -53,7 +53,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     /**
      * {@inheritdoc}
      */
-    public function getStorageKey()
+    public function getStorageKey(): string
     {
         return $this->storageKey;
     }
@@ -61,7 +61,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     /**
      * {@inheritdoc}
      */
-    public function has(string $name)
+    public function has(string $name): bool
     {
         return \array_key_exists($name, $this->attributes);
     }
@@ -77,7 +77,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     /**
      * {@inheritdoc}
      */
-    public function set(string $name, $value)
+    public function set(string $name, $value): void
     {
         $this->attributes[$name] = $value;
     }
@@ -85,7 +85,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function all(): array
     {
         return $this->attributes;
     }
@@ -93,7 +93,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     /**
      * {@inheritdoc}
      */
-    public function replace(array $attributes)
+    public function replace(array $attributes): void
     {
         $this->attributes = [];
         foreach ($attributes as $key => $value) {

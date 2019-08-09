@@ -29,7 +29,7 @@ class RequestStack
      * This method should generally not be called directly as the stack
      * management should be taken care of by the application itself.
      */
-    public function push(Request $request)
+    public function push(Request $request): void
     {
         $this->requests[] = $request;
     }
@@ -41,22 +41,17 @@ class RequestStack
      *
      * This method should generally not be called directly as the stack
      * management should be taken care of by the application itself.
-     *
-     * @return Request|null
      */
-    public function pop()
+    public function pop(): ?Request
     {
         if (!$this->requests) {
-            return;
+            return null;
         }
 
         return array_pop($this->requests);
     }
 
-    /**
-     * @return Request|null
-     */
-    public function getCurrentRequest()
+    public function getCurrentRequest(): ?Request
     {
         return end($this->requests) ?: null;
     }
@@ -67,13 +62,11 @@ class RequestStack
      * Be warned that making your code aware of the master request
      * might make it un-compatible with other features of your framework
      * like ESI support.
-     *
-     * @return Request|null
      */
-    public function getMasterRequest()
+    public function getMasterRequest(): ?Request
     {
         if (!$this->requests) {
-            return;
+            return null;
         }
 
         return $this->requests[0];
@@ -87,15 +80,13 @@ class RequestStack
      * like ESI support.
      *
      * If current Request is the master request, it returns null.
-     *
-     * @return Request|null
      */
-    public function getParentRequest()
+    public function getParentRequest(): ?Request
     {
         $pos = \count($this->requests) - 2;
 
         if (!isset($this->requests[$pos])) {
-            return;
+            return null;
         }
 
         return $this->requests[$pos];

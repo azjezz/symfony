@@ -34,7 +34,7 @@ class PhpBridgeSessionStorage extends NativeSessionStorage
     /**
      * {@inheritdoc}
      */
-    public function start()
+    public function start(): bool
     {
         if ($this->started) {
             return true;
@@ -48,7 +48,7 @@ class PhpBridgeSessionStorage extends NativeSessionStorage
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): void
     {
         // clear out the bags and nothing else that may be set
         // since the purpose of this driver is to share a handler

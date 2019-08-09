@@ -60,7 +60,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         return $this->memcached->quit();
     }
@@ -68,7 +68,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doRead(string $sessionId)
+    protected function doRead(string $sessionId): string
     {
         return $this->memcached->get($this->prefix.$sessionId) ?: '';
     }
@@ -76,7 +76,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
+    public function updateTimestamp($sessionId, $data): bool
     {
         $this->memcached->touch($this->prefix.$sessionId, time() + $this->ttl);
 
@@ -86,7 +86,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doWrite(string $sessionId, string $data)
+    protected function doWrite(string $sessionId, string $data): bool
     {
         return $this->memcached->set($this->prefix.$sessionId, $data, time() + $this->ttl);
     }
@@ -94,7 +94,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy(string $sessionId)
+    protected function doDestroy(string $sessionId): bool
     {
         $result = $this->memcached->delete($this->prefix.$sessionId);
 
@@ -104,7 +104,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         // not required here because memcached will auto expire the records anyhow.
         return true;
@@ -112,10 +112,8 @@ class MemcachedSessionHandler extends AbstractSessionHandler
 
     /**
      * Return a Memcached instance.
-     *
-     * @return \Memcached
      */
-    protected function getMemcached()
+    protected function getMemcached(): \Memcached
     {
         return $this->memcached;
     }

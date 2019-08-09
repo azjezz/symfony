@@ -134,7 +134,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function start()
+    public function start(): bool
     {
         if ($this->started) {
             return true;
@@ -168,7 +168,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->saveHandler->getId();
     }
@@ -176,7 +176,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setId(string $id)
+    public function setId(string $id): void
     {
         $this->saveHandler->setId($id);
     }
@@ -184,7 +184,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->saveHandler->getName();
     }
@@ -192,7 +192,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->saveHandler->setName($name);
     }
@@ -200,7 +200,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerate(bool $destroy = false, int $lifetime = null)
+    public function regenerate(bool $destroy = false, int $lifetime = null): bool
     {
         // Cannot regenerate the session ID for non-active sessions.
         if (\PHP_SESSION_ACTIVE !== session_status()) {
@@ -238,7 +238,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function save()
+    public function save(): void
     {
         $session = $_SESSION;
 
@@ -275,7 +275,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): void
     {
         // clear out the bags
         foreach ($this->bags as $bag) {
@@ -292,7 +292,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function registerBag(SessionBagInterface $bag)
+    public function registerBag(SessionBagInterface $bag): void
     {
         if ($this->started) {
             throw new \LogicException('Cannot register a bag when the session is already started.');
@@ -304,7 +304,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getBag(string $name)
+    public function getBag(string $name): SessionBagInterface
     {
         if (!isset($this->bags[$name])) {
             throw new \InvalidArgumentException(sprintf('The SessionBagInterface %s is not registered.', $name));
@@ -319,7 +319,7 @@ class NativeSessionStorage implements SessionStorageInterface
         return $this->bags[$name];
     }
 
-    public function setMetadataBag(MetadataBag $metaBag = null)
+    public function setMetadataBag(MetadataBag $metaBag = null): void
     {
         if (null === $metaBag) {
             $metaBag = new MetadataBag();
@@ -330,10 +330,8 @@ class NativeSessionStorage implements SessionStorageInterface
 
     /**
      * Gets the MetadataBag.
-     *
-     * @return MetadataBag
      */
-    public function getMetadataBag()
+    public function getMetadataBag(): MetadataBag
     {
         return $this->metadataBag;
     }
@@ -341,7 +339,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function isStarted()
+    public function isStarted(): bool
     {
         return $this->started;
     }
@@ -356,7 +354,7 @@ class NativeSessionStorage implements SessionStorageInterface
      *
      * @see http://php.net/session.configuration
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         if (headers_sent() || \PHP_SESSION_ACTIVE === session_status()) {
             return;
@@ -405,11 +403,11 @@ class NativeSessionStorage implements SessionStorageInterface
      * @see http://php.net/sessionhandler
      * @see http://github.com/drak/NativeSession
      *
-     * @param \SessionHandlerInterface|null $saveHandler
+     * @param AbstractProxy|\SessionHandlerInterface|null $saveHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function setSaveHandler($saveHandler = null)
+    public function setSaveHandler($saveHandler = null): void
     {
         if (!$saveHandler instanceof AbstractProxy &&
             !$saveHandler instanceof \SessionHandlerInterface &&
@@ -442,7 +440,7 @@ class NativeSessionStorage implements SessionStorageInterface
      * PHP takes the return value from the read() handler, unserializes it
      * and populates $_SESSION with the result automatically.
      */
-    protected function loadSession(array &$session = null)
+    protected function loadSession(array &$session = null): void
     {
         if (null === $session) {
             $session = &$_SESSION;
@@ -452,7 +450,7 @@ class NativeSessionStorage implements SessionStorageInterface
 
         foreach ($bags as $bag) {
             $key = $bag->getStorageKey();
-            $session[$key] = isset($session[$key]) ? $session[$key] : [];
+            $session[$key] = $session[$key] ?? [];
             $bag->initialize($session[$key]);
         }
 
