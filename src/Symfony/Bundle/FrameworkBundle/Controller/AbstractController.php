@@ -14,6 +14,7 @@ namespace Symfony\Bundle\FrameworkBundle\Controller;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Container\ContainerInterface;
 use Psr\Link\LinkInterface;
+use Symfony\Bundle\FrameworkBundle\Responder;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -41,7 +42,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\WebLink\EventListener\AddLinkHeaderListener;
 use Symfony\Component\WebLink\GenericLinkProvider;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -91,7 +91,6 @@ abstract class AbstractController implements ServiceSubscriberInterface
             'router' => '?'.RouterInterface::class,
             'request_stack' => '?'.RequestStack::class,
             'http_kernel' => '?'.HttpKernelInterface::class,
-            'serializer' => '?'.SerializerInterface::class,
             'session' => '?'.SessionInterface::class,
             'security.authorization_checker' => '?'.AuthorizationCheckerInterface::class,
             'twig' => '?'.Environment::class,
@@ -102,6 +101,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
             'parameter_bag' => '?'.ContainerBagInterface::class,
             'message_bus' => '?'.MessageBusInterface::class,
             'messenger.default_bus' => '?'.MessageBusInterface::class,
+            'responder' => Responder::class,
         ];
     }
 
@@ -152,7 +152,9 @@ abstract class AbstractController implements ServiceSubscriberInterface
      */
     protected function redirect(string $url, int $status = 302): RedirectResponse
     {
-        return new RedirectResponse($url, $status);
+        trigger_deprecation('symfony/framework-bundle', '5.2', 'method "%s" has been deprecated. use "%s::redirect()" instead.', __METHOD__, Responder::class);
+
+        return $this->container->get('responder')->redirect($url, $status);
     }
 
     /**
@@ -160,7 +162,9 @@ abstract class AbstractController implements ServiceSubscriberInterface
      */
     protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
     {
-        return $this->redirect($this->generateUrl($route, $parameters), $status);
+        trigger_deprecation('symfony/framework-bundle', '5.2', 'method "%s" has been deprecated. use "%s::route()" instead.', __METHOD__, Responder::class);
+
+        return $this->container->get('responder')->route($route, $parameters, $status);
     }
 
     /**
@@ -168,15 +172,9 @@ abstract class AbstractController implements ServiceSubscriberInterface
      */
     protected function json($data, int $status = 200, array $headers = [], array $context = []): JsonResponse
     {
-        if ($this->container->has('serializer')) {
-            $json = $this->container->get('serializer')->serialize($data, 'json', array_merge([
-                'json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS,
-            ], $context));
+        trigger_deprecation('symfony/framework-bundle', '5.2', 'method "%s" has been deprecated. use "%s::json()" instead.', __METHOD__, Responder::class);
 
-            return new JsonResponse($json, $status, $headers, true);
-        }
-
-        return new JsonResponse($data, $status, $headers);
+        return $this->container->get('responder')->json($data, $status, $headers, $context);
     }
 
     /**
@@ -186,10 +184,9 @@ abstract class AbstractController implements ServiceSubscriberInterface
      */
     protected function file($file, string $fileName = null, string $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT): BinaryFileResponse
     {
-        $response = new BinaryFileResponse($file);
-        $response->setContentDisposition($disposition, null === $fileName ? $response->getFile()->getFilename() : $fileName);
+        trigger_deprecation('symfony/framework-bundle', '5.2', 'method "%s" has been deprecated. use "%s::file()" instead.', __METHOD__, Responder::class);
 
-        return $response;
+        return $this->container->get('responder')->file($file, $fileName, $disposition);
     }
 
     /**
@@ -254,6 +251,8 @@ abstract class AbstractController implements ServiceSubscriberInterface
      */
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
+        trigger_deprecation('symfony/framework-bundle', '5.2', 'method "%s" has been deprecated. please use "%s::render()" instead.', __METHOD__, Responder::class);
+
         $content = $this->renderView($view, $parameters);
 
         if (null === $response) {
@@ -270,6 +269,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
      */
     protected function stream(string $view, array $parameters = [], StreamedResponse $response = null): StreamedResponse
     {
+        trigger_deprecation('symfony/framework-bundle', '5.2', 'method "%s" has been deprecated. please use "%s::stream()" instead.', __METHOD__, Responder::class);
         if (!$this->container->has('twig')) {
             throw new \LogicException('You can not use the "stream" method if the Twig Bundle is not available. Try running "composer require symfony/twig-bundle".');
         }

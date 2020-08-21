@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver;
+use Symfony\Bundle\FrameworkBundle\Responder;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver;
@@ -105,5 +106,13 @@ return static function (ContainerConfigurator $container) {
             ])
             ->tag('kernel.event_subscriber')
             ->tag('monolog.logger', ['channel' => 'request'])
+
+        ->set('responder', Responder::class)
+            ->args([
+                service('router'),
+                service('twig')->nullOnInvalid(),
+                service('serializer')->nullOnInvalid()
+            ])
     ;
+
 };
